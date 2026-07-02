@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #2E7D32;
+  --secondary: #43A047;
+  --light-green: #A5D6A7;
+  --background: #F4FFF4;
+  --dark-green: #1B5E20;
+  --accent: #66BB6A;
+  --text-dark: #1A361D;
+  --text-light: #F4FFF4;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  background: linear-gradient(135deg, var(--background) 0%, #e8f5e9 100%);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.btn {
+  background: var(--primary);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn:hover {
+  background: var(--dark-green);
+  box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--glass-bg);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: var(--text-light);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dark-green);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title span {
+  color: var(--accent);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Page Transitions */
+.page-transition {
+  min-height: calc(100vh - 300px); /* Adjust based on header/footer */
+}
+
+/* Section Spacing */
+.section-padding {
+  padding: 80px 0;
+}
+
+/* Inputs */
+.input-field {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid var(--light-green);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.2);
+}
+
+/* Swiper Fixes */
+.swiper-button-next,
+.swiper-button-prev {
+  top: calc(50% - 25px) !important;
+  transform: translateY(-50%) !important;
+  margin-top: 0 !important;
+  background: transparent !important;
+  width: 40px !important;
+  height: 40px !important;
+  box-shadow: none !important;
+  color: var(--primary) !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px !important;
+  font-weight: 900;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness (Phone) */
+@media (max-width: 768px) {
+  /* Hero Section */
+  .hero-h1 {
+    font-size: 2.2rem !important;
+  }
+  .hero-h3 {
+    font-size: 1.5rem !important;
+  }
+  .hero-p {
+    font-size: 1rem !important;
+  }
+  .hero-buttons {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+  .hero-buttons .btn {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 14px 20px !important;
+  }
+
+  /* Offer Banner */
+  .offer-card {
+    padding: 30px 20px !important;
+  }
+  .offer-h2 {
+    font-size: 1.8rem !important;
+  }
+  .offer-p {
+    font-size: 1rem !important;
+    margin-bottom: 25px !important;
+  }
+
+  /* Categories Grid */
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+  }
+  .categories-grid > a > div {
+    height: 120px !important;
+  }
+  .categories-grid > a > div > h3 {
+    font-size: 16px !important;
+  }
+
+  /* Products Grid (2 in a row) */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  
+  /* Product Card adjustments for mobile */
+  .products-grid .glass {
+    padding: 10px !important;
+  }
+  .products-grid .glass > a > div:nth-child(2) { /* The image container */
+    height: 140px !important;
+  }
+  .products-grid .glass h3 {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+    white-space: normal !important; /* Allow wrapping */
+    line-height: 1.2 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+  }
+  .products-grid .btn {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+  
+  /* Mission */
+  .mission-h2 {
+    font-size: 2rem !important;
+  }
+  .mission-card {
+    padding: 20px !important;
+  }
+}
