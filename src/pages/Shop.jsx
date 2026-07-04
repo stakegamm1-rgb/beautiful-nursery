@@ -214,7 +214,12 @@ const Shop = () => {
           </>
         ) : (
           <div style={{ textAlign: 'center', padding: '50px 0', color: 'var(--dark-green)' }}>
-            <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>Oops! No plants found. 🌿</h3>
+            <img 
+              src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png?f=webp" 
+              alt="No Data Found" 
+              style={{ maxWidth: '300px', margin: '0 auto', opacity: 0.8 }}
+            />
+            <h3 style={{ fontSize: '24px', marginBottom: '10px', marginTop: '20px' }}>Oops! No plants found. 🌿</h3>
             <p>Try adjusting your filters or search for something else.</p>
           </div>
         )}

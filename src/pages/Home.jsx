@@ -245,23 +245,34 @@ const Home = () => {
       <section className="section-padding" style={{ background: 'var(--background)' }}>
         <div className="container">
           <h2 className="title">Featured <span>Collections</span></h2>
-          <motion.div
-            className="products-grid"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-            }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '30px' }}
-          >
-            {plants.map((plant, index) => (
-              <motion.div key={plant.id} variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } }} style={{ height: '100%' }}>
-                <ProductCard product={plant} />
-              </motion.div>
-            ))}
-          </motion.div>
+          {plants.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '50px 0' }}>
+              <img 
+                src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png?f=webp" 
+                alt="No Data Found" 
+                style={{ maxWidth: '300px', margin: '0 auto', opacity: 0.8 }}
+              />
+              <h3 style={{ marginTop: '20px', color: 'var(--text-dark)', opacity: 0.7 }}>No Products Available</h3>
+            </div>
+          ) : (
+            <motion.div
+              className="products-grid"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+              }}
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '30px' }}
+            >
+              {plants.map((plant, index) => (
+                <motion.div key={plant.id} variants={{ hidden: { opacity: 0, y: 50 }, visible: { opacity: 1, y: 0 } }} style={{ height: '100%' }}>
+                  <ProductCard product={plant} />
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
           <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <Link to="/shop" className="btn btn-secondary" style={{ padding: '15px 40px', fontSize: '18px' }}>View All Collections</Link>
           </div>
