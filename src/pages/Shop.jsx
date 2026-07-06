@@ -6,7 +6,7 @@ import { useProducts } from '../context/ProductContext';
 import { FaSearch } from 'react-icons/fa';
 
 const Shop = () => {
-  const { products: plants } = useProducts();
+  const { products: plants, loading } = useProducts();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialCategory = queryParams.get('category') || 'All';
@@ -171,7 +171,13 @@ const Shop = () => {
         </div>
 
         {/* Product Grid */}
-        {paginatedPlants.length > 0 ? (
+        {loading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '25px', marginBottom: '40px' }}>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="loading-shimmer" style={{ height: '350px', borderRadius: '20px' }}></div>
+            ))}
+          </div>
+        ) : paginatedPlants.length > 0 ? (
           <>
             <motion.div 
               layout

@@ -13,7 +13,7 @@ const Admin = () => {
     discountPrice: '',
     category: 'Indoor',
     badge: '',
-    image: ''
+    images: [] // changed from image string to images array
   });
 
   const handleChange = (e) => {
@@ -63,32 +63,49 @@ const Admin = () => {
   };
 
   const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    
+    if (files.length > 0) {
+      if (formData.images.length + files.length > 3) {
+        alert("You can only upload up to 3 images per product.");
+        return;
+      }
+      
       setIsUploading(true);
       try {
-        const compressedBase64 = await compressImage(file);
-        setFormData((prev) => ({ ...prev, image: compressedBase64 }));
+        const compressedBase64s = await Promise.all(files.map(file => compressImage(file)));
+        setFormData((prev) => ({ ...prev, images: [...prev.images, ...compressedBase64s].slice(0, 3) }));
       } catch (error) {
-        console.error("Error compressing image:", error);
-        alert("Failed to process image.");
+        console.error("Error compressing images:", error);
+        alert("Failed to process images.");
       } finally {
         setIsUploading(false);
       }
     }
   };
 
+  const removeImage = (indexToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsUploading(true);
+    if (formData.images.length === 0) {
+      alert("Please upload at least 1 image.");
+      return;
+    }
     
-    let imageUrl = formData.image || "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+    setIsUploading(true);
     
     await addProduct({
       ...formData,
       price: Number(formData.price),
       discountPrice: formData.discountPrice ? Number(formData.discountPrice) : undefined,
-      image: imageUrl,
+      image: formData.images[0], // backward compatibility
+      images: formData.images, // store array
     });
 
     setSuccess(true);
@@ -100,7 +117,7 @@ const Admin = () => {
       discountPrice: '',
       category: 'Indoor',
       badge: '',
-      image: ''
+      images: []
     });
   };
 
@@ -200,25 +217,29 @@ const Admin = () => {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#555', marginBottom: '8px' }}>Product Image *</label>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#555', marginBottom: '8px' }}>Product Images (Max 3) *</label>
               
+              <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: formData.images.length > 0 ? '20px' : '0' }}>
+                {formData.images.map((imgSrc, idx) => (
+                  <div key={idx} style={{ position: 'relative', width: '120px', height: '120px', borderRadius: '8px', border: '1px solid #eee', overflow: 'hidden' }}>
+                    <img src={imgSrc} alt={`Preview ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#fafafa' }} />
+                    <button type="button" onClick={() => removeImage(idx)} style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(255,255,255,0.8)', border: 'none', color: '#e63946', cursor: 'pointer', fontWeight: 'bold', width: '25px', height: '25px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>X</button>
+                  </div>
+                ))}
+              </div>
+
               {isUploading ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa' }}>
                   <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Processing Image...</p>
                 </div>
-              ) : formData.image ? (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa' }}>
-                  <img src={formData.image} alt="Preview" style={{ height: '120px', objectFit: 'contain', marginBottom: '15px', borderRadius: '8px' }} />
-                  <button type="button" onClick={() => setFormData(prev => ({...prev, image: ''}))} style={{ background: 'none', border: 'none', color: '#e63946', cursor: 'pointer', fontWeight: 'bold' }}>Remove Image</button>
-                </div>
-              ) : (
+              ) : formData.images.length < 3 && (
                 <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa', cursor: 'pointer', width: '100%' }}>
                   <Upload style={{ color: '#ccc', width: '40px', height: '40px', marginBottom: '10px' }} />
                   <span style={{ color: 'var(--primary)', fontWeight: 'bold', cursor: 'pointer' }}>
-                    Upload a file
+                    Upload {formData.images.length > 0 ? 'another file' : 'a file'}
                   </span>
-                  <input type="file" style={{ display: 'none' }} accept="image/*" onChange={handleImageChange} required />
-                  <p style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>PNG, JPG, GIF</p>
+                  <input type="file" multiple style={{ display: 'none' }} accept="image/*" onChange={handleImageChange} />
+                  <p style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>PNG, JPG, GIF (Max 3)</p>
                 </label>
               )}
             </div>

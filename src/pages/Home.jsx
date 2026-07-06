@@ -14,7 +14,7 @@ import heroVideo from '../assets/video.mp4';
 import meImage from '../assets/me.jpeg';
 
 const Home = () => {
-  const { products: plants } = useProducts();
+  const { products: plants, loading } = useProducts();
   const leafVariants = {
     animate: {
       y: ["-20px", "20px"],
@@ -245,7 +245,13 @@ const Home = () => {
       <section className="section-padding" style={{ background: 'var(--background)' }}>
         <div className="container">
           <h2 className="title">Featured <span>Collections</span></h2>
-          {plants.length === 0 ? (
+          {loading ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '30px' }}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="loading-shimmer" style={{ height: '350px', borderRadius: '20px' }}></div>
+              ))}
+            </div>
+          ) : plants.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '50px 0' }}>
               <img 
                 src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png?f=webp" 

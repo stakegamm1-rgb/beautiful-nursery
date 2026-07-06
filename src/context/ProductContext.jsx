@@ -10,6 +10,7 @@ export const useProducts = () => {
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Listen to realtime updates from Firestore
@@ -28,8 +29,10 @@ export const ProductProvider = ({ children }) => {
       });
       
       setProducts(fetchedProducts);
+      setLoading(false);
     }, (error) => {
       console.error("Error fetching products from Firebase:", error);
+      setLoading(false);
     });
 
     // Cleanup subscription on unmount
@@ -65,7 +68,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider value={{ products, addProduct, deleteProduct }}>
+    <ProductContext.Provider value={{ products, addProduct, deleteProduct, loading }}>
       {children}
     </ProductContext.Provider>
   );

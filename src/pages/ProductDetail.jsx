@@ -7,22 +7,39 @@ import { customerReviews } from '../data/reviews';
 import { CartContext } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products: plants } = useProducts();
+  const { products: plants, loading } = useProducts();
   const { addToCart, wishlist, toggleWishlist, cart } = useContext(CartContext);
   
-  const product = plants.find(p => p.id === parseInt(id));
+  const product = plants.find(p => String(p.id) === String(id));
+  const productImages = product?.images && product.images.length > 0 ? product.images : [product?.image].filter(Boolean);
   
   // Image Gallery State
-  const [activeImage, setActiveImage] = useState(product?.image);
+  const [activeImage, setActiveImage] = useState(productImages[0]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Scroll to top on route change or product change
   useEffect(() => {
     window.scrollTo(0, 0);
-    setActiveImage(product?.image);
+    setActiveImage(productImages[0]);
   }, [id, product]);
+
+  if (loading) {
+    return <div className="container section-padding" style={{ textAlign: 'center', marginTop: '100px' }}><div className="loading-shimmer" style={{height: '400px', borderRadius: '20px'}}></div><h2 style={{marginTop: '20px'}}>Loading product...</h2></div>;
+  }
 
   if (!product) {
     return <div className="container section-padding" style={{ textAlign: 'center', marginTop: '100px' }}><h2>Product not found</h2><Link to="/shop" className="btn">Back to Shop</Link></div>;
@@ -38,12 +55,8 @@ const ProductDetail = () => {
   }
   similarPlants = similarPlants.slice(0, 4);
 
-  // Mock Thumbnails (using main image and a few random ones for demonstration)
-  const thumbnails = [
-    product.image,
-    "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1463320726281-696a485928c7?auto=format&fit=crop&w=400&q=80"
-  ];
+  // Actual thumbnails from product
+  const thumbnails = productImages;
 
   const handleShare = () => {
     if (navigator.share) {
@@ -71,49 +84,75 @@ const ProductDetail = () => {
           
           {/* LEFT COLUMN: Image Gallery */}
           <div style={{ flex: '1 1 40%', minWidth: '320px' }}>
-            <div style={{ background: '#f8fdf8', borderRadius: '20px', padding: '20px', position: 'relative', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <AnimatePresence mode="wait">
-                <motion.img 
-                  key={activeImage}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  src={activeImage} 
-                  alt={product.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-                />
-              </AnimatePresence>
-              
-              <button 
-                onClick={() => toggleWishlist(product)}
-                style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', border: 'none', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', zIndex: 10, boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}
-              >
-                {isWished ? <FaHeart color="#e63946" size={20} /> : <FaRegHeart size={20} color="#888" />}
-              </button>
-            </div>
-
-            {/* Thumbnails */}
-            <div style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
-              {thumbnails.map((thumb, idx) => (
-                <div 
-                  key={idx} 
-                  onClick={() => setActiveImage(thumb)}
-                  style={{ 
-                    flex: 1, 
-                    height: '80px', 
-                    borderRadius: '12px', 
-                    overflow: 'hidden', 
-                    cursor: 'pointer',
-                    border: activeImage === thumb ? '2px solid var(--primary)' : '2px solid transparent',
-                    background: '#f8fdf8',
-                    padding: '5px'
-                  }}
+            {isMobile && thumbnails.length > 1 ? (
+              <div style={{ background: '#f8fdf8', borderRadius: '20px', position: 'relative', height: '450px', padding: '10px' }}>
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{ clickable: true }}
+                  style={{ width: '100%', height: '100%', borderRadius: '15px', paddingBottom: '30px' }}
                 >
-                  <img src={thumb} alt={`Thumbnail ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  {thumbnails.map((imgSrc, idx) => (
+                    <SwiperSlide key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img src={imgSrc} alt={`${product.name} ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <button 
+                  onClick={() => toggleWishlist(product)}
+                  style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', border: 'none', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', zIndex: 10, boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}
+                >
+                  {isWished ? <FaHeart color="#e63946" size={20} /> : <FaRegHeart size={20} color="#888" />}
+                </button>
+              </div>
+            ) : (
+              <>
+                <div style={{ background: '#f8fdf8', borderRadius: '20px', padding: '20px', position: 'relative', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <AnimatePresence mode="wait">
+                    <motion.img 
+                      key={activeImage}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      src={activeImage} 
+                      alt={product.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                    />
+                  </AnimatePresence>
+                  
+                  <button 
+                    onClick={() => toggleWishlist(product)}
+                    style={{ position: 'absolute', top: '20px', right: '20px', background: 'white', border: 'none', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', zIndex: 10, boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}
+                  >
+                    {isWished ? <FaHeart color="#e63946" size={20} /> : <FaRegHeart size={20} color="#888" />}
+                  </button>
                 </div>
-              ))}
-            </div>
+
+                {/* Desktop Thumbnails */}
+                {thumbnails.length > 1 && (
+                  <div style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
+                    {thumbnails.map((thumb, idx) => (
+                      <div 
+                        key={idx} 
+                        onClick={() => setActiveImage(thumb)}
+                        style={{ 
+                          flex: 1, 
+                          height: '80px', 
+                          borderRadius: '12px', 
+                          overflow: 'hidden', 
+                          cursor: 'pointer',
+                          border: activeImage === thumb ? '2px solid var(--primary)' : '2px solid transparent',
+                          background: '#f8fdf8',
+                          padding: '5px'
+                        }}
+                      >
+                        <img src={thumb} alt={`Thumbnail ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           {/* RIGHT COLUMN: Product Info */}
@@ -269,6 +308,61 @@ const ProductDetail = () => {
               </p>
             </div>
           </div>
+          {/* Individual Reviews */}
+          <div style={{ marginTop: '40px' }}>
+            <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '20px', color: 'var(--dark-green)' }}>Recent Reviews</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+              {React.useMemo(() => {
+                const fakeNames = ["Aarav S.", "Priya M.", "Rajesh K.", "Neha D.", "Anjali R.", "Vikram T.", "Sneha P.", "Rohan B.", "Pooja V.", "Amit J."];
+                const fakeTexts = [
+                  "Absolutely love this plant! It arrived in perfect condition and looks beautiful in my living room.",
+                  "Packaging was secure and the plant is very healthy. Will definitely buy again from Beautiful Nursery.",
+                  "Customer service was great and the delivery was fast. Highly recommended!",
+                  "Beautiful and vibrant leaves! Just as described.",
+                  "I was worried about buying plants online, but this exceeded my expectations. So fresh!",
+                  "A wonderful addition to my indoor garden. Great quality.",
+                  "Riyaz Sir's team does a fantastic job. The plant was lush and green.",
+                  "Perfect size and healthy roots. Very satisfied.",
+                  "Exceeded expectations! It's thriving well.",
+                  "Great price for such a premium plant. Thanks!"
+                ];
+                
+                // Generate random number of reviews between 5 and 10 based on product id
+                const charCodeSum = String(product.id).split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+                const numReviews = (charCodeSum % 6) + 5; // 5 to 10
+                
+                const reviews = [];
+                for (let i = 0; i < numReviews; i++) {
+                  const nameIndex = (charCodeSum + i * 3) % fakeNames.length;
+                  const textIndex = (charCodeSum + i * 7) % fakeTexts.length;
+                  const rating = (charCodeSum + i) % 10 === 0 ? 4 : 5; // Mostly 5 stars, some 4 stars
+                  
+                  reviews.push({
+                    id: i,
+                    name: fakeNames[nameIndex],
+                    text: fakeTexts[textIndex],
+                    rating: rating,
+                    date: new Date(Date.now() - (i * 24 * 60 * 60 * 1000 * 3) - (charCodeSum * 1000000)).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })
+                  });
+                }
+                return reviews;
+              }, [product.id]).map(review => (
+                <div key={review.id} style={{ background: 'white', padding: '20px', borderRadius: '15px', border: '1px solid #eee' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <h5 style={{ margin: 0, fontSize: '15px', fontWeight: 700 }}>{review.name}</h5>
+                    <span style={{ fontSize: '12px', color: '#999' }}>{review.date}</span>
+                  </div>
+                  <div style={{ display: 'flex', color: '#ffb703', fontSize: '12px', marginBottom: '10px' }}>
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} color={i < review.rating ? "#ffb703" : "#e0e0e0"} />
+                    ))}
+                  </div>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#555', lineHeight: 1.5 }}>"{review.text}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 
