@@ -227,7 +227,7 @@ const Home = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', color: 'var(--text-dark)', position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                     <span style={{ fontSize: '1.2rem', marginTop: '2px' }}>📍</span>
-                    <p style={{ margin: 0, lineHeight: 1.5 }}>Mirpara Manjil hati, pin 743424<br />Guma Chakla Road, Barasat<br />West Bengal, India</p>
+                    <p style={{ margin: 0, lineHeight: 1.5 }}>INDIA. KOLKATA. WEST BENGAL. BARASAT.GUMA. CHAKLA ROAD</p>
                   </div>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '5px' }}>
                     <span style={{ fontSize: '1.2rem' }}>📞</span>

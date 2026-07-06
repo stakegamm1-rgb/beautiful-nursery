@@ -37,7 +37,7 @@ const Footer = () => {
             <h3 style={{ fontSize: '20px', marginBottom: '20px', color: 'white' }}>Contact Us</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               <ul style={{ listStyle: 'none', padding: 0, opacity: 0.8, lineHeight: '2' }}>
-                <li>Mirpara Manjil hati. pin743424 guma chakla Road BARASAT WEST BENGAL 743424. bodor.kolkata West Bengal. India</li>
+                <li>INDIA. KOLKATA. WEST BENGAL. BARASAT.GUMA. CHAKLA ROAD</li>
                 <li>📞 +91 9932176236</li>
                 <li>✉️ nursery@beautifulnursery.com</li>
               </ul>

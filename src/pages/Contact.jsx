@@ -88,7 +88,7 @@ const Contact = () => {
               </div>
               <div>
                 <h4 style={{ color: 'var(--dark-green)' }}>Address</h4>
-                <p>Mirpara Manjil hati. pin743424 guma chakla Road BARASAT WEST BENGAL 743424.<br/>bodor.kolkata West Bengal. India</p>
+                <p>INDIA. KOLKATA. WEST BENGAL. BARASAT.GUMA. CHAKLA ROAD</p>
               </div>
             </div>
           </motion.div>

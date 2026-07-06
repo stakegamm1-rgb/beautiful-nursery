@@ -5,6 +5,8 @@ import { Upload, Plus, Check, Trash2 } from 'lucide-react';
 const Admin = () => {
   const { products, addProduct, deleteProduct } = useProducts();
   const [success, setSuccess] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -19,28 +21,78 @@ const Admin = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
+  // Compress image before saving to fit within Firestore's 1MB limit
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 600;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Compress to WebP at 70% quality (very small file size)
+          const dataUrl = canvas.toDataURL('image/webp', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setIsUploading(true);
+      try {
+        const compressedBase64 = await compressImage(file);
+        setFormData((prev) => ({ ...prev, image: compressedBase64 }));
+      } catch (error) {
+        console.error("Error compressing image:", error);
+        alert("Failed to process image.");
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsUploading(true);
     
-    addProduct({
+    let imageUrl = formData.image || "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+    
+    await addProduct({
       ...formData,
       price: Number(formData.price),
       discountPrice: formData.discountPrice ? Number(formData.discountPrice) : undefined,
-      image: formData.image || "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // fallback image
+      image: imageUrl,
     });
 
     setSuccess(true);
+    setIsUploading(false);
     setTimeout(() => setSuccess(false), 3000);
     setFormData({
       name: '',
@@ -149,32 +201,36 @@ const Admin = () => {
 
             <div>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', color: '#555', marginBottom: '8px' }}>Product Image *</label>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa', cursor: 'pointer' }}>
-                {formData.image ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={formData.image} alt="Preview" style={{ height: '120px', objectFit: 'contain', marginBottom: '15px', borderRadius: '8px' }} />
-                    <button type="button" onClick={() => setFormData(prev => ({...prev, image: ''}))} style={{ background: 'none', border: 'none', color: '#e63946', cursor: 'pointer', fontWeight: 'bold' }}>Remove Image</button>
-                  </div>
-                ) : (
-                  <>
-                    <Upload style={{ color: '#ccc', width: '40px', height: '40px', marginBottom: '10px' }} />
-                    <label style={{ color: 'var(--primary)', fontWeight: 'bold', cursor: 'pointer' }}>
-                      Upload a file
-                      <input type="file" style={{ display: 'none' }} accept="image/*" onChange={handleImageChange} required />
-                    </label>
-                    <p style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>PNG, JPG, GIF up to 5MB</p>
-                  </>
-                )}
-              </div>
+              
+              {isUploading ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa' }}>
+                  <p style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Processing Image...</p>
+                </div>
+              ) : formData.image ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa' }}>
+                  <img src={formData.image} alt="Preview" style={{ height: '120px', objectFit: 'contain', marginBottom: '15px', borderRadius: '8px' }} />
+                  <button type="button" onClick={() => setFormData(prev => ({...prev, image: ''}))} style={{ background: 'none', border: 'none', color: '#e63946', cursor: 'pointer', fontWeight: 'bold' }}>Remove Image</button>
+                </div>
+              ) : (
+                <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px', border: '2px dashed #ccc', borderRadius: '12px', background: '#fafafa', cursor: 'pointer', width: '100%' }}>
+                  <Upload style={{ color: '#ccc', width: '40px', height: '40px', marginBottom: '10px' }} />
+                  <span style={{ color: 'var(--primary)', fontWeight: 'bold', cursor: 'pointer' }}>
+                    Upload a file
+                  </span>
+                  <input type="file" style={{ display: 'none' }} accept="image/*" onChange={handleImageChange} required />
+                  <p style={{ fontSize: '12px', color: '#999', marginTop: '5px' }}>PNG, JPG, GIF</p>
+                </label>
+              )}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '15px' }}>
               <button
                 type="submit"
+                disabled={isUploading}
                 className="btn"
-                style={{ padding: '14px 30px', fontSize: '16px', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '30px' }}
+                style={{ padding: '14px 30px', fontSize: '16px', background: isUploading ? '#ccc' : 'var(--primary)', color: 'white', border: 'none', borderRadius: '30px', cursor: isUploading ? 'not-allowed' : 'pointer' }}
               >
-                Add Product
+                {isUploading ? 'Uploading...' : 'Add Product'}
               </button>
             </div>
           </form>
