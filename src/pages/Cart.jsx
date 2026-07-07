@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaTrash, FaPlus, FaMinus, FaTruck, FaShoppingCart, FaCreditCard, FaCheckCircle, FaTag, FaCheck, FaArrowLeft } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
+import Tesseract from 'tesseract.js';
 import qrCodeImage from '../assets/qrcode.jpeg';
 import CustomAlert from '../components/CustomAlert';
 
@@ -25,6 +26,10 @@ const Cart = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: '', phone: '', address: '' });
   const [alertMessage, setAlertMessage] = useState('');
+  const [paymentScreenshot, setPaymentScreenshot] = useState(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isScreenshotVerified, setIsScreenshotVerified] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -43,7 +48,43 @@ const Cart = () => {
     }
   };
 
+  const handleScreenshotUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setPaymentScreenshot(file);
+    setIsVerifying(true);
+    setAlertMessage('');
+    
+    try {
+      const result = await Tesseract.recognize(file, 'eng');
+      const text = result.data.text.replace(/,/g, ''); // remove commas for easier matching
+      
+      if (text.includes(finalTotal.toString())) {
+        setIsScreenshotVerified(true);
+        setIsVerifying(false);
+        setIsSuccessModalOpen(true);
+      } else {
+        setIsVerifying(false);
+        setPaymentScreenshot(null);
+        setIsScreenshotVerified(false);
+        setAlertMessage(`Invalid payment receipt or amount mismatch. Please ensure you upload a clear and valid screenshot of your successful payment.`);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsVerifying(false);
+      setPaymentScreenshot(null);
+      setIsScreenshotVerified(false);
+      setAlertMessage('Error verifying screenshot. Please try again.');
+    }
+  };
+
   const handlePlaceOrder = () => {
+    if (!isScreenshotVerified) {
+      setAlertMessage('Please upload a valid payment screenshot to place the order.');
+      return;
+    }
+
     let text = `*New Order Details*\n\n`;
     text += `*Customer:* ${formData.name}\n`;
     text += `*Phone:* ${formData.phone}\n`;
@@ -60,6 +101,7 @@ const Cart = () => {
 
     text += `\n*Grand Total: ₹${finalTotal}*\n`;
     text += `*Payment Method:* UPI/QR (Prepaid)\n`;
+    text += `*Note:* I have attached the payment screenshot with this message.\n`;
 
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/919932176236?text=${encodedText}`;
@@ -256,16 +298,23 @@ const Cart = () => {
                         <span>₹{totalSavings + 99}</span>
                       </div>
                     </div>
-
                     <div style={{ textAlign: 'center' }}>
-                      <h3 style={{ fontSize: '18px', color: 'var(--text-dark)', marginBottom: '15px', fontWeight: 700 }}>Scan & Pay ₹{finalTotal}</h3>
-                      <div style={{ display: 'inline-block', padding: '15px', background: 'white', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', marginBottom: '20px' }}>
-                        <img src={qrCodeImage} alt="Payment QR" style={{ width: '200px', height: '200px', objectFit: 'contain', borderRadius: '10px' }} />
+                        <h3 style={{ fontSize: '18px', color: 'var(--text-dark)', marginBottom: '15px', fontWeight: 700 }}>Scan & Pay ₹{finalTotal}</h3>
+                        <div style={{ display: 'inline-block', padding: '15px', background: 'white', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', marginBottom: '20px' }}>
+                          <img src={qrCodeImage} alt="Payment QR" style={{ width: '200px', height: '200px', objectFit: 'contain', borderRadius: '10px' }} />
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#d32f2f', fontSize: '12px', fontWeight: 700, background: '#ffebee', padding: '8px 15px', borderRadius: '20px', width: 'fit-content', margin: '0 auto' }}>
+                          <FaCheckCircle /> Cash on Delivery is NOT Available
+                        </div>
+
+                        <div style={{ marginTop: '30px', textAlign: 'left', background: '#f8fdf8', padding: '20px', borderRadius: '15px', border: '1px solid #e0f2eb' }}>
+                          <label style={{ display: 'block', marginBottom: '10px', fontSize: '14px', fontWeight: 700, color: 'var(--text-dark)' }}>Upload Payment Screenshot <span style={{ color: '#d32f2f' }}>*</span></label>
+                          <p style={{ fontSize: '12px', color: '#666', marginBottom: '15px' }}>Please upload a screenshot of your payment. Our system will verify the amount (₹{finalTotal}) before you can place the order.</p>
+                          <input type="file" accept="image/*" onChange={handleScreenshotUpload} style={{ display: 'block', width: '100%', marginBottom: '10px', padding: '10px', background: 'white', border: '1px solid #ddd', borderRadius: '8px' }} />
+                          {isVerifying && <p style={{ fontSize: '13px', color: '#0284c7', display: 'flex', alignItems: 'center', gap: '5px' }}>⏳ Verifying screenshot amount...</p>}
+                          {isScreenshotVerified && <p style={{ fontSize: '13px', color: '#15803d', display: 'flex', alignItems: 'center', gap: '5px' }}><FaCheckCircle /> Screenshot verified successfully.</p>}
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#d32f2f', fontSize: '12px', fontWeight: 700, background: '#ffebee', padding: '8px 15px', borderRadius: '20px', width: 'fit-content', margin: '0 auto' }}>
-                        <FaCheckCircle /> Cash on Delivery is NOT Available
-                      </div>
-                    </div>
                   </motion.div>
                 )}
 
@@ -383,6 +432,17 @@ const Cart = () => {
         }
       `}</style>
       <CustomAlert isOpen={!!alertMessage} message={alertMessage} onClose={() => setAlertMessage('')} />
+      <CustomAlert 
+        isOpen={isSuccessModalOpen} 
+        message="Payment verified successfully! You can now place your order." 
+        type="success"
+        actionText="Payment Verified, Place Order"
+        onAction={() => {
+          setIsSuccessModalOpen(false);
+          handlePlaceOrder();
+        }}
+        onClose={() => setIsSuccessModalOpen(false)}
+      />
     </div>
   );
 };
