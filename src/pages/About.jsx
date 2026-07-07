@@ -11,7 +11,7 @@ const About = () => {
 
   const handleOtpSubmit = (e) => {
     e.preventDefault();
-    if (otp === '7515') {
+    if (otp === '9581') {
       setShowOtpModal(false);
       navigate('/admin');
     } else {
