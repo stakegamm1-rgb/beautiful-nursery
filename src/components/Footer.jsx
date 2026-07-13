@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
               <FaLeaf size={32} color="var(--accent)" />
-              <span style={{ fontSize: '24px', fontWeight: 800 }}>Beautiful Nursery</span>
+              <span style={{ fontSize: '24px', fontWeight: 800 }}>Sadia Nursery</span>
             </div>
             <p style={{ color: 'var(--light-green)', lineHeight: 1.6, marginBottom: '20px' }}>
               Bringing greenery and happiness to your doorstep with premium, healthy plants for every space.
@@ -46,7 +46,7 @@ const Footer = () => {
 
         </div>
         <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', opacity: 0.6 }}>
-          <p>© 2026 Beautiful Nursery. All Rights Reserved.</p>
+          <p>© 2026 Sadia Nursery. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
