@@ -11,7 +11,7 @@ const Footer = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
               <FaLeaf size={32} color="var(--accent)" />
-              <span style={{ fontSize: '24px', fontWeight: 800 }}>Sadia Nursery</span>
+              <span style={{ fontSize: '24px', fontWeight: 800 }}>SADIA NURSERY</span>
             </div>
             <p style={{ color: 'var(--light-green)', lineHeight: 1.6, marginBottom: '20px' }}>
               Bringing greenery and happiness to your doorstep with premium, healthy plants for every space.
@@ -38,15 +38,15 @@ const Footer = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               <ul style={{ listStyle: 'none', padding: 0, opacity: 0.8, lineHeight: '2' }}>
                 <li>INDIA. KOLKATA. WEST BENGAL. BARASAT.GUMA. CHAKLA ROAD</li>
-                <li>📞 +91 9932176236</li>
-                <li>✉️ nursery@beautifulnursery.com</li>
+                <li>📞 +91 8371996637</li>
+                <li>✉️ nursery@sadianursery.com</li>
               </ul>
             </div>
           </div>
 
         </div>
         <div style={{ textAlign: 'center', marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', opacity: 0.6 }}>
-          <p>© 2026 Sadia Nursery. All Rights Reserved.</p>
+          <p>© 2026 SADIA NURSERY. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

@@ -104,7 +104,7 @@ const Cart = () => {
     text += `*Note:* I have attached the payment screenshot with this message.\n`;
 
     const encodedText = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/919932176236?text=${encodedText}`;
+    const whatsappUrl = `https://wa.me/918371996637?text=${encodedText}`;
 
     window.location.href = whatsappUrl;
   };

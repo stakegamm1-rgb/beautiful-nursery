@@ -42,7 +42,7 @@ const CartModal = ({ isOpen, onClose }) => {
     text += `*Payment Method:* UPI/QR (Prepaid)\n`;
 
     const encodedText = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/919932176236?text=${encodedText}`;
+    const whatsappUrl = `https://wa.me/918371996637?text=${encodedText}`;
     
     // Redirect to WhatsApp
     window.location.href = whatsappUrl;

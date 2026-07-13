@@ -41,7 +41,7 @@ const Navbar = () => {
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
           <FaLeaf size={32} color={showSolidNav ? "var(--primary)" : "white"} />
-          <span style={{ fontSize: '24px', fontWeight: 800, color: showSolidNav ? 'var(--dark-green)' : 'white' }}>Sadia Nursery</span>
+          <span style={{ fontSize: '24px', fontWeight: 800, color: showSolidNav ? 'var(--dark-green)' : 'white' }}>SADIA NURSERY</span>
         </Link>
 
         {/* Desktop Links */}

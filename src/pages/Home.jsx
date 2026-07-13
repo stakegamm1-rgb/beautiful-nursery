@@ -192,7 +192,7 @@ const Home = () => {
                 <div style={{ position: 'absolute', top: '-15px', left: '-15px', right: '-15px', bottom: '-15px', background: 'linear-gradient(45deg, var(--primary), var(--accent))', borderRadius: '50%', zIndex: 0, animation: 'spin 10s linear infinite' }}></div>
                 <img
                   src={meImage}
-                  alt="Riyaz Sir - Sadia Nursery"
+                  alt="Riyaz Sir - SADIA NURSERY"
                   style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '50%', position: 'relative', zIndex: 1, boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '2.3px solid white' }}
                 />
               </div>
@@ -205,7 +205,7 @@ const Home = () => {
               transition={{ duration: 0.8 }}
               style={{ flex: '1 1 500px' }}
             >
-              <h2 className="mission-h2" style={{ fontSize: '3rem', color: 'var(--dark-green)', marginBottom: '20px', lineHeight: 1.2 }}>Our Mission at <br /><span style={{ color: 'var(--primary)' }}>Sadia Nursery</span></h2>
+              <h2 className="mission-h2" style={{ fontSize: '3rem', color: 'var(--dark-green)', marginBottom: '20px', lineHeight: 1.2 }}>Our Mission at <br /><span style={{ color: 'var(--primary)' }}>SADIA NURSERY</span></h2>
               <p style={{ color: 'var(--text-dark)', fontSize: '1.2rem', lineHeight: 1.8, marginBottom: '30px' }}>
                 "We believe that every home deserves a touch of nature. Our mission is to provide the highest quality, most beautiful plants to bring life, joy, and fresh air into your personal spaces."
               </p>
@@ -231,7 +231,7 @@ const Home = () => {
                   </div>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '5px' }}>
                     <span style={{ fontSize: '1.2rem' }}>📞</span>
-                    <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--dark-green)' }}>9932176236</p>
+                    <p style={{ margin: 0, fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--dark-green)' }}>8371996637</p>
                   </div>
                 </div>
               </div>

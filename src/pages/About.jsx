@@ -72,7 +72,7 @@ const About = () => {
                 <div style={{ position: 'absolute', inset: '-10px', background: 'radial-gradient(circle, rgba(46,125,50,0.15) 0%, transparent 70%)', zIndex: -1, borderRadius: '40px' }}></div>
                 <img 
                   src={aboutImage} 
-                  alt="Sadia Nursery" 
+                  alt="SADIA NURSERY" 
                   style={{ display: 'block', width: '100%', maxHeight: '550px', objectFit: 'contain', borderRadius: '15px' }} 
                 />
               </motion.div>
@@ -125,13 +125,13 @@ const About = () => {
               transition={{ duration: 0.8 }}
               style={{ flex: '1 1 500px' }}
             >
-              <h4 style={{ color: 'var(--primary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '10px', fontSize: '14px' }}>About Sadia Nursery</h4>
+              <h4 style={{ color: 'var(--primary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '10px', fontSize: '14px' }}>About SADIA NURSERY</h4>
               <h2 style={{ fontSize: '2.2rem', color: 'var(--dark-green)', marginBottom: '20px', lineHeight: 1.2, fontWeight: 800 }}>
                 Rooted in <span style={{ background: 'linear-gradient(to right, var(--primary), var(--accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Passion</span>,<br/>Growing with You.
               </h2>
               
               <p style={{ fontSize: '1rem', color: 'var(--text-dark)', lineHeight: 1.8, marginBottom: '20px' }}>
-                At <strong>Sadia Nursery</strong>, our passion for nature drives everything we do. For over a decade, we have been dedicated to cultivating <span style={{ color: 'var(--dark-green)', fontWeight: 'bold' }}>high-quality, healthy plants</span> that bring life, joy, and fresh air into your personal spaces.
+                At <strong>SADIA NURSERY</strong>, our passion for nature drives everything we do. For over a decade, we have been dedicated to cultivating <span style={{ color: 'var(--dark-green)', fontWeight: 'bold' }}>high-quality, healthy plants</span> that bring life, joy, and fresh air into your personal spaces.
               </p>
               
               <p style={{ fontSize: '0.95rem', color: 'var(--text-dark)', lineHeight: 1.8, marginBottom: '35px' }}>

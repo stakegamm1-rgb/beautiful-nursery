@@ -62,7 +62,7 @@ const ProductDetail = () => {
     if (navigator.share) {
       navigator.share({
         title: product.name,
-        text: `Check out this beautiful ${product.name} at Sadia Nursery!`,
+        text: `Check out this beautiful ${product.name} at SADIA NURSERY!`,
         url: window.location.href,
       }).catch(console.error);
     } else {
@@ -184,7 +184,7 @@ const ProductDetail = () => {
             </div>
 
             <p style={{ color: '#555', fontSize: '15px', lineHeight: '1.8', marginBottom: '30px' }}>
-              The {product.name} is a stunning addition to any space, perfectly curated by Sadia Nursery. Known for its air-purifying qualities and lush foliage, it thrives with minimal care. Delivered fresh, healthy, and securely potted.
+              The {product.name} is a stunning addition to any space, perfectly curated by SADIA NURSERY. Known for its air-purifying qualities and lush foliage, it thrives with minimal care. Delivered fresh, healthy, and securely potted.
             </p>
 
             {/* Actions */}
@@ -304,7 +304,7 @@ const ProductDetail = () => {
             <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '15px' }}>We promise 100% Satisfaction</h3>
               <p style={{ color: '#666', lineHeight: 1.6 }}>
-                Every plant from Sadia Nursery is hand-picked, thoroughly inspected, and securely packed. Over {product.reviewCount} customers have trusted us to bring greenery into their lives. Read what they have to say below!
+                Every plant from SADIA NURSERY is hand-picked, thoroughly inspected, and securely packed. Over {product.reviewCount} customers have trusted us to bring greenery into their lives. Read what they have to say below!
               </p>
             </div>
           </div>
@@ -316,7 +316,7 @@ const ProductDetail = () => {
                 const fakeNames = ["Aarav S.", "Priya M.", "Rajesh K.", "Neha D.", "Anjali R.", "Vikram T.", "Sneha P.", "Rohan B.", "Pooja V.", "Amit J."];
                 const fakeTexts = [
                   "Absolutely love this plant! It arrived in perfect condition and looks beautiful in my living room.",
-                  "Packaging was secure and the plant is very healthy. Will definitely buy again from Sadia Nursery.",
+                  "Packaging was secure and the plant is very healthy. Will definitely buy again from SADIA NURSERY.",
                   "Customer service was great and the delivery was fast. Highly recommended!",
                   "Beautiful and vibrant leaves! Just as described.",
                   "I was worried about buying plants online, but this exceeded my expectations. So fresh!",

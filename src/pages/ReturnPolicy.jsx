@@ -56,7 +56,7 @@ const ReturnPolicy = () => {
           >
             <h2 style={{ fontSize: '24px', color: 'var(--primary)', marginBottom: '15px' }}>3. How to Request a Return</h2>
             <p style={{ color: 'var(--text-dark)', lineHeight: '1.8' }}>
-              To initiate a return or replacement, please email us at <strong>nursery@beautifulnursery.com</strong> or send us a WhatsApp message at <strong>+91 9932176236</strong> with your order number and photos of the item.
+              To initiate a return or replacement, please email us at <strong>nursery@sadianursery.com</strong> or send us a WhatsApp message at <strong>+91 8371996637</strong> with your order number and photos of the item.
             </p>
           </motion.div>
 
