@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import aboutImage from '../assets/about.png';
+import aboutImage from '../assets/about.jpeg';
 
 const About = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
